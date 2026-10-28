@@ -1,0 +1,26 @@
+name: binary installs
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  macos-arm64:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install this tap snapshot
+        run: brew tap hyperswine/tap "$GITHUB_WORKSPACE"
+      - name: Install and test release binaries
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: "1"
+        run: |
+          for file in Formula/*.rb; do
+            formula="${file##*/}"
+            formula="${formula%.rb}"
+            brew install "hyperswine/tap/$formula"
+            brew test "hyperswine/tap/$formula"
+            brew linkage --test "hyperswine/tap/$formula"
+          done
