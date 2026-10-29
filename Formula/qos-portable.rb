@@ -2,9 +2,9 @@
 class QosPortable < Formula
   desc "FP-RISC compiler and installed QOS desktop app SDK"
   homepage "https://github.com/hyperswine/qos"
-  url "https://github.com/hyperswine/qos/releases/download/desktop-v0.1.0-rc1/qos-portable-0.1.0-rc1-macos-arm64.tar.gz"
-  version "0.1.0-rc1"
-  sha256 "5322a5d435239291cc2b907763d4df7f86bd6f30500e11ab64f0a34cab6c8e6f"
+  url "https://github.com/hyperswine/qos/releases/download/desktop-v0.1.0/qos-portable-0.1.0-macos-arm64.tar.gz"
+  version "0.1.0"
+  sha256 "4dabdc1432aea44af00ad69fd72816791020ce0541a9a2f98c2cd0ecb68ec0fb"
   license "MIT"
 
   depends_on arch: :arm64
@@ -20,9 +20,9 @@ class QosPortable < Formula
   def install
     libexec.install "libexec/qos-portable"
     tools = "#{Formula["llvm"].opt_bin}:#{Formula["lld"].opt_bin}:#{Formula["python@3.14"].opt_libexec}/bin:$PATH"
-    (bin/"fpr").write_env_script libexec/"qos-portable/compiler/fpr", PATH: tools
+    (bin/"fpr").write_env_script libexec/"qos-portable/compiler/fpr", PATH: tools, PYTHONDONTWRITEBYTECODE: "1"
     (bin/"qos").write_env_script Formula["python@3.14"].opt_bin/"python3.14",
-                               [libexec/"qos-portable/tools/portable_sdk.py"], { PATH: tools }
+                               [libexec/"qos-portable/tools/portable_sdk.py"], { PATH: tools, PYTHONDONTWRITEBYTECODE: "1" }
   end
 
   def caveats
@@ -40,7 +40,7 @@ class QosPortable < Formula
   end
 
   test do
-    assert_match "QOS Portable 0.1.0-rc1", shell_output("#{bin}/qos --version")
+    assert_match "QOS Portable 0.1.0", shell_output("#{bin}/qos --version")
     system bin/"qos", "new", "counter"
     cd "counter" do
       system bin/"fpr", "build", "--target=qos-portable"
