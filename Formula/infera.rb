@@ -1,9 +1,9 @@
 class Infera < Formula
   desc "Prolog-inspired logic language with sorts, tabling and CLP(Z)"
   homepage "https://github.com/hyperswine/NeoProlog"
-  url "https://github.com/hyperswine/NeoProlog/releases/download/v2.1.0/infera-macos-arm64.tar.gz"
-  version "2.1.0"
-  sha256 "1fdf0a9146b1126c141dbb93f5b3660d759af1844677761077115cad76b94041"
+  url "https://github.com/hyperswine/NeoProlog/releases/download/v2.2.0/infera-macos-arm64.tar.gz"
+  version "2.2.0"
+  sha256 "0d6c681519241d363f402948df00f3f954bd06fa5a509ab25e21d20a78eecb75"
   license "GPL-3.0-only"
 
   depends_on arch: :arm64
