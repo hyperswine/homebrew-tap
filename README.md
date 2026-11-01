@@ -16,6 +16,34 @@ these initial formulae; upstream Linux archives remain separate downloads.
 
 Use `brew upgrade hyperswine/tap/infera hyperswine/tap/coscad` for updates.
 
+## FP-RISC and QOS: fprmeta and qosmeta
+
+FP-RISC toolchains and QOS Portable SDKs are installed by two small managers,
+not by versioned formulas. Homebrew installs only the managers:
+
+```sh
+brew install hyperswine/tap/fprmeta     # fprmeta, fpr, sol
+brew install hyperswine/tap/qosmeta     # qosmeta, qos
+fprmeta install                         # newest FP-RISC toolchain into ~/.fpr
+qosmeta install                         # newest QOS SDK into ~/.qos
+```
+
+`fpr`, `sol` and `qos` are launchers: each runs the version a project pins
+(`fpr.toml` `[toolchain] fpr`, `qos.toml` `[sdk] version`; `"0.12.0"` means
+0.12.0 or a later 0.12.x, `"=0.12.3"` exactly that one) or the default. Several
+versions can be installed side by side; `brew upgrade` only updates the
+managers. The versions on offer are listed in `toolchains/fprisc.json` and
+`toolchains/qos-portable.json`, which the managers read from this repository;
+`fprmeta available` and `qosmeta available` show them.
+
+The old `fprisc` and `qos-portable` formulas are renamed to `fprmeta` and
+`qosmeta` (`formula_renames.json`). After the move, run `fprmeta install
+0.12.0` and `qosmeta install`.
+
+To offer a new version, add an entry with the release archive's URL and
+SHA-256 to the matching list and push it. Never change the hash of an
+existing version; publish a new one instead.
+
 ## Installed files
 
 - Infera examples and their module map: `$(brew --prefix)/share/infera`.
