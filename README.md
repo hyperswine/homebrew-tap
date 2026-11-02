@@ -19,7 +19,8 @@ Use `brew upgrade hyperswine/tap/infera hyperswine/tap/coscad` for updates.
 ## FP-RISC and QOS: fprmeta and qosmeta
 
 FP-RISC toolchains and QOS Portable SDKs are installed by two small managers,
-not by versioned formulas. Homebrew installs only the managers:
+not by versioned formulas. Manager 0.2.0 requires Apple Silicon and macOS
+27.2 or later. Homebrew installs only the managers:
 
 ```sh
 brew install hyperswine/tap/fprmeta     # fprmeta, fpr, sol
@@ -40,9 +41,21 @@ The old `fprisc` and `qos-portable` formulas are renamed to `fprmeta` and
 `qosmeta` (`formula_renames.json`). After the move, run `fprmeta install
 0.12.0` and `qosmeta install`.
 
-To offer a new version, add an entry with the release archive's URL and
-SHA-256 to the matching list and push it. Never change the hash of an
-existing version; publish a new one instead.
+Published indexes are authenticated with the Ed25519 key in
+`toolchains/release.pub`; the managers embed the same public key. Each index
+has a sibling `.json.sig` OpenSSH signature in namespace `fprmeta-index`.
+Custom unsigned lists require explicit `--allow-unsigned-index`.
+
+To offer a new version, add an entry with its archive URL, SHA-256, size,
+actual minimum OS and requirements, sign the exact index bytes using FP-RISC's
+`tools/sign-release-index.sh`, and publish the index and signature together.
+Keep the private key outside Git. Verify an install from the public index
+before updating manager formulas. Never change an existing archive hash;
+publish a new release instead. Metadata corrections must be signed again.
+
+Manager 0.2.0 also provides `which --json` for editor discovery. The FP-RISC
+extension can follow each project's managed compiler or private QOS SDK;
+leave `fpr.home` and `fpr.compilerPath` empty to use automatic selection.
 
 ## Installed files
 
