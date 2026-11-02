@@ -17,6 +17,7 @@ class Fprmeta < Formula
   depends_on "libgit2"
 
   def install
+    odie "This manager binary requires macOS 27.2 or later" if MacOS.version < MacOSVersion.new("27.2")
     libexec.install "bin/fprmeta"
     # One binary that acts on its own name: the manager, and the launchers
     # that run the version a project pins (or the default).
@@ -32,6 +33,7 @@ class Fprmeta < Formula
       or the default. `fprmeta available` lists the published versions.
       Native builds need the Xcode Command Line Tools:
         xcode-select --install
+      Manager 0.2.0 requires macOS 27.2 or later.
       Published indexes are signature-verified; project pins never auto-install.
       Toolchains, projects and Sol state stay when this formula is removed.
     EOS

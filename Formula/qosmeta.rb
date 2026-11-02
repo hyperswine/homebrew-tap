@@ -18,6 +18,7 @@ class Qosmeta < Formula
   depends_on "libgit2"
 
   def install
+    odie "This manager binary requires macOS 27.2 or later" if MacOS.version < MacOSVersion.new("27.2")
     libexec.install "bin/fprmeta"
     %w[qosmeta qos].each { |name| bin.install_symlink libexec/"fprmeta" => name }
   end
@@ -31,6 +32,7 @@ class Qosmeta < Formula
       Each SDK carries its own compiler and ld.lld; building needs Clang from
       the Xcode Command Line Tools:
         xcode-select --install
+      Manager 0.2.0 requires macOS 27.2 or later.
       Published indexes are signature-verified; project pins never auto-install.
       SDKs, projects and QOS disks stay when this formula is removed.
     EOS
