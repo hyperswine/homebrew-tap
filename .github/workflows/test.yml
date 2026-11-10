@@ -17,10 +17,34 @@ jobs:
         env:
           HOMEBREW_NO_AUTO_UPDATE: "1"
         run: |
+          # Skip formulas whose macOS or arch requirements this runner cannot
+          # meet (fprmeta and qosmeta need Golden Gate / macOS 27; this job
+          # runs on macos-15). infera and coscad still install and test.
+          # scripts/formula-supported.py prefers brew info --json=v2 and
+          # falls back to parsing depends_on in the formula file.
+          set -euo pipefail
+          tested=0
+          skipped=0
           for file in Formula/*.rb; do
             formula="${file##*/}"
             formula="${formula%.rb}"
-            brew install "hyperswine/tap/$formula"
-            brew test "hyperswine/tap/$formula"
-            brew linkage --test "hyperswine/tap/$formula"
+            set +e
+            python3 scripts/formula-supported.py "$file"
+            status=$?
+            set -e
+            if [ "$status" -eq 0 ]; then
+              brew install "hyperswine/tap/$formula"
+              brew test "hyperswine/tap/$formula"
+              brew linkage --test "hyperswine/tap/$formula"
+              tested=$((tested + 1))
+            elif [ "$status" -eq 2 ]; then
+              skipped=$((skipped + 1))
+            else
+              exit "$status"
+            fi
           done
+          echo "Tested ${tested} formula(s), skipped ${skipped}."
+          if [ "$tested" -eq 0 ]; then
+            echo "error: no formulas were installable on this runner" >&2
+            exit 1
+          fi
