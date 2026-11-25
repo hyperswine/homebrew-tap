@@ -46,10 +46,19 @@ Published indexes are authenticated with the Ed25519 key in
 has a sibling `.json.sig` OpenSSH signature in namespace `fprmeta-index`.
 Custom unsigned lists require explicit `--allow-unsigned-index`.
 
-To offer a new version, add an entry with its archive URL, SHA-256, size,
-actual minimum OS and requirements, sign the exact index bytes using FP-RISC's
-`tools/sign-release-index.sh`, and publish the index and signature together.
-Keep the private key outside Git. Verify an install from the public index
+To offer a new version, from an FP-RISC checkout, with this tap and the
+`fpr-release` key on this machine:
+
+```sh
+fpr sol tools/publish-release-index.sol --tap /path/to/homebrew-tap --key /path/to/fpr-release   fprisc:0.14.0 fprisc:0.15.0 qos:0.5.0 qos:0.6.0
+```
+
+The script fetches each GitHub release, checks SHA-256 and size, appends the
+entries in version order, signs the exact index bytes (OpenSSH, namespace
+`fprmeta-index`, identity `fpr-release`), verifies the signatures, and prints
+the git commands to publish this repository. The private key stays outside Git
+and is only passed to `ssh-keygen` locally; see FP-RISC's
+`docs/release-indexes/README.md`. Verify an install from the public index
 before updating manager formulas. Never change an existing archive hash;
 publish a new release instead. Metadata corrections must be signed again.
 
