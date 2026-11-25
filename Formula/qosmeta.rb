@@ -4,13 +4,13 @@
 class Qosmeta < Formula
   desc "QOS Portable SDK manager: installs SDKs in ~/.qos and launches qos"
   homepage "https://github.com/hyperswine/qos"
-  url "https://github.com/hyperswine/fprisc/releases/download/fprmeta-v0.2.0/fprmeta-0.2.0-macos-arm64.tar.gz"
-  version "0.2.0"
-  sha256 "f5f9ee18878496e670a7cca0c35f72c0d49c799eee79f3aebb28c1867e86fc3b"
+  url "https://github.com/hyperswine/fprisc/releases/download/fprmeta-v0.2.1/fprmeta-0.2.1-macos-arm64.tar.gz"
+  version "0.2.1"
+  sha256 "17bd859decb4446e019e4563f74ec246011a4e487eeb8c99f68c091ded0379ea"
   license "MIT"
 
   depends_on arch: :arm64
-  depends_on macos: :golden_gate
+  depends_on macos: :sonoma
   # SDK 0.3.0's private compiler loads libgit2 and libarchive, and its GL
   # host loads glfw, from Homebrew.
   depends_on "glfw"
@@ -18,7 +18,7 @@ class Qosmeta < Formula
   depends_on "libgit2"
 
   def install
-    odie "This manager binary requires macOS 27.2 or later" if MacOS.version < MacOSVersion.new("27.2")
+    odie "This manager binary requires macOS 14.0 or later" if MacOS.version < MacOSVersion.new("14.0")
     libexec.install "bin/fprmeta"
     %w[qosmeta qos].each { |name| bin.install_symlink libexec/"fprmeta" => name }
   end
@@ -32,7 +32,8 @@ class Qosmeta < Formula
       Each SDK carries its own compiler and ld.lld; building needs Clang from
       the Xcode Command Line Tools:
         xcode-select --install
-      Manager 0.2.0 requires macOS 27.2 or later.
+      Manager 0.2.1 requires macOS 14.0 or later.
+      Downloaded versions have their own macOS requirements.
       Published indexes are signature-verified; project pins never auto-install.
       SDKs, projects and QOS disks stay when this formula is removed.
     EOS
@@ -40,7 +41,7 @@ class Qosmeta < Formula
 
   test do
     ENV["QOSMETA_HOME"] = testpath/"qos"
-    assert_match "qosmeta 0.2.0", shell_output("#{bin}/qosmeta --version")
+    assert_match "qosmeta 0.2.1", shell_output("#{bin}/qosmeta --version")
     assert_match "no qos-portable versions installed", shell_output("#{bin}/qosmeta list")
     index = testpath/"index.json"
     index.write <<~JSON

@@ -3,21 +3,21 @@
 class Fprmeta < Formula
   desc "FP-RISC toolchain manager: installs versions in ~/.fpr and launches fpr and sol"
   homepage "https://github.com/hyperswine/fprisc"
-  url "https://github.com/hyperswine/fprisc/releases/download/fprmeta-v0.2.0/fprmeta-0.2.0-macos-arm64.tar.gz"
-  version "0.2.0"
-  sha256 "f5f9ee18878496e670a7cca0c35f72c0d49c799eee79f3aebb28c1867e86fc3b"
+  url "https://github.com/hyperswine/fprisc/releases/download/fprmeta-v0.2.1/fprmeta-0.2.1-macos-arm64.tar.gz"
+  version "0.2.1"
+  sha256 "17bd859decb4446e019e4563f74ec246011a4e487eeb8c99f68c091ded0379ea"
   license "MIT"
 
   depends_on arch: :arm64
   # The binary records its own minimum macOS.
-  depends_on macos: :golden_gate
+  depends_on macos: :sonoma
   # FP-RISC 0.12.0's compiler loads these from Homebrew. Toolchains that
   # bundle them (self-contained archives) will not need them.
   depends_on "libarchive"
   depends_on "libgit2"
 
   def install
-    odie "This manager binary requires macOS 27.2 or later" if MacOS.version < MacOSVersion.new("27.2")
+    odie "This manager binary requires macOS 14.0 or later" if MacOS.version < MacOSVersion.new("14.0")
     libexec.install "bin/fprmeta"
     # One binary that acts on its own name: the manager, and the launchers
     # that run the version a project pins (or the default).
@@ -33,7 +33,8 @@ class Fprmeta < Formula
       or the default. `fprmeta available` lists the published versions.
       Native builds need the Xcode Command Line Tools:
         xcode-select --install
-      Manager 0.2.0 requires macOS 27.2 or later.
+      Manager 0.2.1 requires macOS 14.0 or later.
+      Downloaded versions have their own macOS requirements.
       Published indexes are signature-verified; project pins never auto-install.
       Toolchains, projects and Sol state stay when this formula is removed.
     EOS
@@ -41,7 +42,7 @@ class Fprmeta < Formula
 
   test do
     ENV["FPRMETA_HOME"] = testpath/"fpr"
-    assert_match "fprmeta 0.2.0", shell_output("#{bin}/fprmeta --version")
+    assert_match "fprmeta 0.2.1", shell_output("#{bin}/fprmeta --version")
     assert_match "no fprisc versions installed", shell_output("#{bin}/fprmeta list")
     index = testpath/"index.json"
     index.write <<~JSON
