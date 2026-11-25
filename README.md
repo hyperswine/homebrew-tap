@@ -50,7 +50,8 @@ To offer a new version, from an FP-RISC checkout, with this tap and the
 `fpr-release` key on this machine:
 
 ```sh
-fpr sol tools/publish-release-index.sol --tap /path/to/homebrew-tap --key /path/to/fpr-release   fprisc:0.14.0 fprisc:0.15.0 qos:0.5.0 qos:0.6.0
+fpr sol tools/publish-release-index.sol --tap /path/to/homebrew-tap --key /path/to/fpr-release \
+  fprisc:0.14.0 fprisc:0.15.0 qos:0.5.0 qos:0.6.0
 ```
 
 The script fetches each GitHub release, checks SHA-256 and size, appends the
