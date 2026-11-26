@@ -33,6 +33,22 @@
         "homebrew:glfw"
       ],
       "yanked": false
+    },
+    {
+      "component": "qos-portable",
+      "version": "0.6.1",
+      "platform": "macos-arm64",
+      "url": "https://github.com/hyperswine/qos/releases/download/desktop-v0.6.1/qos-portable-0.6.1-macos-arm64.tar.gz",
+      "sha256": "fabae15b3aa46b2ddba0687a345c0b9a377965fb68792a3cfcb9f8cef301e81e",
+      "size": 24246556,
+      "minimumOS": "27.2",
+      "requires": [
+        "xcode-clt",
+        "homebrew:libgit2",
+        "homebrew:libarchive",
+        "homebrew:glfw"
+      ],
+      "yanked": false
     }
   ]
 }
